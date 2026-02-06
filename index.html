@@ -1,72 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trinity AI Interface</title>
+    <title>Arcee AI - Trinity Large Preview</title>
     <style>
-        /* This section makes it look like a real app instead of a plain text file */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a1a; /* Dark background like a terminal */
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #0f172a; /* Bleu nuit profond */
+            color: #f8fafc;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
         }
 
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            max-width: 500px;
+        .container {
+            background: #1e293b;
             width: 90%;
+            max-width: 700px;
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
         }
 
-        .badge {
-            background-color: #00c853;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-
-        h1 {
-            color: #007bff;
-            margin: 0 0 10px 0;
-            font-size: 28px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        p {
-            color: #555;
-            line-height: 1.5;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 15px;
             margin-bottom: 20px;
         }
 
-        .output {
-            font-style: italic;
-            color: #007bff;
-            font-weight: 500;
+        .model-badge {
+            background: #3b82f6; /* Bleu Arcee */
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
         }
+
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #60a5fa;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .stat-card small {
+            color: #94a3b8;
+            font-size: 0.7rem;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .stat-card span {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .description {
+            line-height: 1.6;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        .terminal {
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            color: #10b981; /* Vert terminal */
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #10b981;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <div class="badge">Model: Trinity-Large-Preview</div>
-        <h1>Project Dashboard</h1>
-        
-        <p>This is a starter template for your AI-integrated application. You can use this space to display model outputs, chat interfaces, or data visualizations.</p>
-        
-        <div class="output">
-            Waiting for Arcee AI response...
+    <div class="container">
+        <div class="header">
+            <h1>Trinity-Large-Preview</h1>
+            <span class="model-badge">400B MoE</span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <small>Context Window</small>
+                <span>512k tokens</span>
+            </div>
+            <div class="stat-card">
+                <small>Active Parameters</small>
+                <span>13B per token</span>
+            </div>
+        </div>
+
+        <div class="description">
+            Ce modèle est optimisé pour les scénarios d'écriture créative, de role-play et les tâches agentiques complexes (OpenCode, Cline). Il utilise un routage expert 4-of-256 pour une efficacité maximale.
+        </div>
+
+        <div class="terminal">
+            > Waiting for Arcee AI response...<span class="cursor"></span>
         </div>
     </div>
 
