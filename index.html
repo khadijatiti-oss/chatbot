@@ -3,135 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trinity Large Preview Dashboard</title>
+    <title>Qwen3-Coder Agent Console</title>
     <style>
+        :root {
+            --bg: #0d1117;
+            --sidebar: #161b22;
+            --accent: #2f81f7;
+            --text: #c9d1d9;
+            --border: #30363d;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             margin: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            height: 100vh;
         }
 
-        .container {
-            background: #1e293b;
-            width: 90%;
-            max-width: 600px;
-            padding: 30px;
-            border-radius: 16px;
-            border: 1px solid #334155;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-        }
-
-        .header {
+        /* Sidebar info */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            padding: 20px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        .model-badge {
-            background: #3b82f6;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            margin: 0;
-            color: #60a5fa;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            flex-direction: column;
             gap: 15px;
-            margin: 20px 0;
         }
 
-        .stat-card {
-            background: #0f172a;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #3b82f6;
-        }
-
-        .stat-card small {
-            color: #94a3b8;
-            font-size: 0.7rem;
-            display: block;
-            text-transform: uppercase;
-        }
-
-        .stat-card span {
+        .badge {
+            background: rgba(47, 129, 247, 0.15);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 11px;
+            text-align: center;
             font-weight: bold;
-            font-size: 1rem;
         }
 
-        .description {
-            line-height: 1.6;
-            color: #cbd5e1;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
+        /* Main Chat */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
-        .terminal {
-            background: #000;
+        #chat-window {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .msg {
+            max-width: 85%;
             padding: 15px;
             border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            color: #10b981;
-            font-size: 0.9rem;
-            border: 1px solid #1e293b;
+            line-height: 1.6;
+            font-family: 'Consolas', monospace;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 15px;
-            background: #10b981;
-            animation: blink 1s infinite;
-            margin-left: 5px;
+        .user { align-self: flex-end; background: #21262d; border: 1px solid var(--border); }
+        .bot { align-self: flex-start; background: #161b22; border-left: 4px solid var(--accent); }
+
+        /* Input Area */
+        .input-area {
+            padding: 25px;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
         }
 
-        @keyframes blink { 50% { opacity: 0; } }
+        .input-box {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            background: #0d1117;
+            border: 1px solid var(--border);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>Trinity-Large-Preview</h1>
-            <span class="model-badge">400B MoE</span>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <small>Context Window</small>
-                <span>512k tokens</span>
-            </div>
-            <div class="stat-card">
-                <small>Active Parameters</small>
-                <span>13B per token</span>
-            </div>
-        </div>
-
-        <div class="description">
-            Ce modèle est optimisé pour les scénarios d'écriture créative, de role-play et les tâches agentiques complexes (OpenCode, Cline). Il utilise un routage expert 4-of-256 pour une efficacité maximale.
-        </div>
-
-        <div class="terminal">
-            &gt; Waiting for Arcee AI response...<span class="cursor"></span>
-        </div>
-    </div>
-
-</body>
-</html>
+    <div class="sidebar">
+        <div class="badge">QWEN3-CODER-NEXT</div>
+        <h3 style="margin:0; font-size: 14px;">Agent Dashboard</h3>
+        <p style="font-size: 12px; color: #8b949e;">
+            • 80B Sparse MoE<br>
+            • 256k Context<br>
+            • Agentic Optimized
+        </p>
+        <hr style="border:0; border-top:1px solid var(--border); width:100%;">
