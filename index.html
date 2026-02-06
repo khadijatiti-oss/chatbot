@@ -3,165 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trinity Large Preview | Arcee AI</title>
+    <title>Trinity Large Preview Dashboard</title>
     <style>
-        :root {
-            --bg-color: #0b0f1a;
-            --card-bg: #161b2c;
-            --accent-blue: #3b82f6;
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --user-msg: #2563eb;
-            --bot-msg: #1e293b;
-        }
-
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
             margin: 0;
             display: flex;
-            flex-direction: column;
-            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        /* Barre supérieure */
-        .navbar {
-            background-color: var(--card-bg);
-            padding: 15px 25px;
-            border-bottom: 1px solid #2d3748;
+        .container {
+            background: #1e293b;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
         }
 
-        .model-info h1 {
-            font-size: 1.2rem;
-            margin: 0;
-            color: var(--accent-blue);
-        }
-
-        .badge {
-            background: rgba(59, 130, 246, 0.2);
-            color: var(--accent-blue);
-            padding: 4px 10px;
-            border-radius: 6px;
+        .model-badge {
+            background: #3b82f6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: bold;
-            border: 1px solid var(--accent-blue);
+            font-weight: 700;
         }
 
-        /* Zone de messages */
-        #chat-window {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #60a5fa;
         }
 
-        .message {
-            max-width: 80%;
-            padding: 15px;
-            border-radius: 15px;
-            line-height: 1.5;
-            font-size: 0.95rem;
-            position: relative;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
         }
 
-        .bot-message {
-            align-self: flex-start;
-            background-color: var(--bot-msg);
-            border-bottom-left-radius: 2px;
-            border: 1px solid #2d3748;
-        }
-
-        .user-message {
-            align-self: flex-end;
-            background-color: var(--user-msg);
-            color: white;
-            border-bottom-right-radius: 2px;
-        }
-
-        /* Zone de saisie */
-        .input-container {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-top: 1px solid #2d3748;
-        }
-
-        .input-wrapper {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            gap: 10px;
-        }
-
-        input {
-            flex: 1;
+        .stat-card {
             background: #0f172a;
-            border: 1px solid #334155;
-            padding: 12px 18px;
-            border-radius: 10px;
-            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .stat-card small {
+            color: #94a3b8;
+            font-size: 0.7rem;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .stat-card span {
+            font-weight: bold;
             font-size: 1rem;
-            outline: none;
-            transition: border 0.3s;
         }
 
-        input:focus {
-            border-color: var(--accent-blue);
+        .description {
+            line-height: 1.6;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
         }
 
-        button {
-            background-color: var(--accent-blue);
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: opacity 0.2s;
+        .terminal {
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            color: #10b981;
+            font-size: 0.9rem;
+            border: 1px solid #1e293b;
         }
 
-        button:hover {
-            opacity: 0.9;
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #10b981;
+            animation: blink 1s infinite;
+            margin-left: 5px;
         }
 
-        /* Scrollbar */
-        #chat-window::-webkit-scrollbar { width: 6px; }
-        #chat-window::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
-    <div class="navbar">
-        <div class="model-info">
+    <div class="container">
+        <div class="header">
             <h1>Trinity-Large-Preview</h1>
-            <div style="color: var(--text-muted); font-size: 0.8rem;">400B Sparse MoE | 128k Context</div>
+            <span class="model-badge">400B MoE</span>
         </div>
-        <span class="badge">FREE ON OPENROUTER</span>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <small>Context Window</small>
+                <span>512k tokens</span>
+            </div>
+            <div class="stat-card">
+                <small>Active Parameters</small>
+                <span>13B per token</span>
+            </div>
+        </div>
+
+        <div class="description">
+            Ce modèle est optimisé pour les scénarios d'écriture créative, de role-play et les tâches agentiques complexes (OpenCode, Cline). Il utilise un routage expert 4-of-256 pour une efficacité maximale.
+        </div>
+
+        <div class="terminal">
+            &gt; Waiting for Arcee AI response...<span class="cursor"></span>
+        </div>
     </div>
 
-    <div id="chat-window">
-        <div class="message bot-message">
-            <strong>Trinity-Large-Preview :</strong><br>
-            Bonjour ! Je suis le modèle MoE d'Arcee AI. Je suis optimisé pour l'écriture créative, le storytelling et les tâches agentiques complexes. Comment puis-je vous aider ?
-        </div>
-    </div>
-
-    <div class="input-container">
-        <div class="input-wrapper">
-            <input type="text" id="user-input" placeholder="Envoyer un message à Trinity..." onkeypress="if(event.key === 'Enter') sendMessage()">
-            <button onclick="sendMessage()">Envoyer</button>
-        </div>
-    </div>
-
-    <script>
-        const chatWindow = document.getElementById('chat-window');
-        const userInput = document.getElementById('user-input');
-
-        function sendMessage() {
-            const message = userInput.value.trim();
-            if (message === "") return;
+</body>
+</html>
