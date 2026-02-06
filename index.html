@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+ <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -6,215 +7,221 @@
     <title>Kimi K2.5 | Multimodal Agent</title>
     <style>
         :root {
-            --primary: #8e44ad; /* Violet profond pour Kimi */
-            --bg: #050505;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --text: #ffffff;
+            --primary: #6366f1; /* Indigo moderne pour Kimi */
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --border: #334155;
+            --user-bubble: #4f46e5;
         }
 
         body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background: var(--bg);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
             color: var(--text);
             margin: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Swarm Background Effect */
-        .swarm-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1a0f2e 0%, #050505 100%);
-            z-index: -1;
-        }
-
-        .chat-container {
-            width: 90%;
-            max-width: 900px;
-            height: 85vh;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .chat-header {
-            padding: 20px 30px;
+        /* Barre de navigation */
+        header {
+            background: var(--card);
+            padding: 1rem 2rem;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .model-name {
-            font-size: 1.2rem;
-            font-weight: 700;
-            background: linear-gradient(to right, #a29bfe, #8e44ad);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .status {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #10b981;
         }
 
-        .status-badge {
-            font-size: 0.7rem;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: rgba(142, 68, 173, 0.2);
-            color: #dcdde1;
-            border: 1px solid var(--primary);
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 10px #10b981;
         }
 
+        /* Zone de Chat */
         #chat-window {
             flex: 1;
             overflow-y: auto;
-            padding: 25px;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 1.5rem;
         }
 
         .message {
             max-width: 80%;
-            padding: 15px 20px;
-            border-radius: 18px;
-            line-height: 1.5;
+            padding: 1rem;
+            border-radius: 1rem;
             font-size: 0.95rem;
+            line-height: 1.5;
             animation: fadeIn 0.3s ease;
         }
 
-        .user-msg {
-            align-self: flex-end;
-            background: var(--primary);
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .bot-msg {
+        .bot {
             align-self: flex-start;
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--card);
             border: 1px solid var(--border);
-            border-bottom-left-radius: 4px;
+            border-bottom-left-radius: 0.2rem;
         }
 
+        .user {
+            align-self: flex-end;
+            background: var(--user-bubble);
+            color: white;
+            border-bottom-right-radius: 0.2rem;
+        }
+
+        /* Zone de saisie */
         .input-area {
-            padding: 25px;
+            background: var(--card);
+            padding: 1.5rem;
             border-top: 1px solid var(--border);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
             display: flex;
-            gap: 15px;
+            gap: 1rem;
         }
 
         input {
             flex: 1;
-            background: rgba(0, 0, 0, 0.3);
+            background: #0f172a;
             border: 1px solid var(--border);
-            padding: 14px 20px;
-            border-radius: 14px;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.2rem;
             color: white;
             outline: none;
-            transition: 0.3s;
+            transition: border 0.3s;
         }
 
-        input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(142, 68, 173, 0.3); }
+        input:focus {
+            border-color: var(--primary);
+        }
 
         button {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 0 25px;
-            border-radius: 14px;
+            padding: 0 1.5rem;
+            border-radius: 0.75rem;
             cursor: pointer;
             font-weight: 600;
-            transition: 0.3s;
+            transition: transform 0.1s;
         }
 
-        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        button:active {
+            transform: scale(0.95);
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="swarm-bg"></div>
-
-    <div class="chat-container">
-        <div class="chat-header">
-            <div>
-                <div class="model-name">KIMI K2.5</div>
-                <div style="font-size: 0.7rem; color: #94a3b8;">Native Multimodal Swarm Agent</div>
-            </div>
-            <span class="status-badge">15T Mixed Tokens</span>
-        </div>
-
-        <div id="chat-window">
-            <div class="message bot-msg">
-                <strong>[Kimi K2.5 Initialized]</strong><br>
-                Je suis opérationnel. Maîtrisant le codage visuel et le raisonnement multimodal, je suis prêt à traiter vos requêtes complexes. Que développons-nous aujourd'hui ?
-            </div>
-        </div>
-
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Envoyez une instruction à l'agent Kimi..." onkeypress="if(event.key==='Enter') sendMessage()">
-            <button onclick="sendMessage()" id="sendBtn">SEND</button>
-        </div>
+<header>
+    <div>
+        <h2 style="margin:0; font-size: 1.2rem;">Kimi K2.5</h2>
+        <span style="font-size: 0.75rem; color: #94a3b8;">Moonshot AI Multimodal Agent</span>
     </div>
+    <div class="status">
+        <div class="status-dot"></div> Connected to OpenRouter
+    </div>
+</header>
 
-    <script>
-        // Remplacer par votre clé OpenRouter
-        const API_KEY = "sk-or-v1-593...61c"; 
-        const MODEL_ID = "moonshotai/kimi-k2.5";
+<div id="chat-window">
+    <div class="message bot">
+        <strong>Kimi K2.5 :</strong><br>
+        Bonjour ! Je suis Kimi K2.5. Je maîtrise le raisonnement complexe, le codage visuel et l'utilisation d'outils agentiques. Comment puis-je vous aider aujourd'hui ?
+    </div>
+</div>
 
-        async function sendMessage() {
-            const input = document.getElementById('userInput');
-            const btn = document.getElementById('sendBtn');
-            const text = input.value.trim();
+<div class="input-area">
+    <div class="container">
+        <input type="text" id="userInput" placeholder="Envoyez un message à l'agent..." onkeypress="if(event.key==='Enter') sendMessage()">
+        <button id="sendBtn" onclick="sendMessage()">Envoyer</button>
+    </div>
+</div>
 
-            if (!text) return;
+<script>
+    const API_KEY = "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";
+    const MODEL_ID = "moonshotai/kimi-k2.5";
 
-            // Ajout du message utilisateur à l'écran
-            appendMessage(text, 'user-msg');
-            input.value = "";
-            btn.disabled = true;
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const text = input.value.trim();
+        const btn = document.getElementById('sendBtn');
 
-            try {
-                const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${API_KEY}`,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        "model": MODEL_ID,
-                        "messages": [{ "role": "user", "content": text }]
-                    })
-                });
+        if (!text) return;
 
-                const data = await response.json();
+        // Affichage message utilisateur
+        appendMessage(text, 'user');
+        input.value = "";
+        btn.disabled = true;
+
+        try {
+            const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${API_KEY}`,
+                    "HTTP-Referer": window.location.href, // Requis par OpenRouter
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "model": MODEL_ID,
+                    "messages": [
+                        {"role": "user", "content": text}
+                    ]
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.choices && data.choices[0]) {
                 const aiResponse = data.choices[0].message.content;
-                appendMessage(aiResponse, 'bot-msg');
-
-            } catch (error) {
-                appendMessage("Erreur réseau ou clé API invalide.", 'bot-msg');
-                console.error(error);
-            } finally {
-                btn.disabled = false;
+                appendMessage(aiResponse, 'bot');
+            } else {
+                appendMessage("Erreur : Impossible de récupérer la réponse.", 'bot');
             }
-        }
 
-        function appendMessage(text, className) {
-            const chatWindow = document.getElementById('chat-window');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `message ${className}`;
-            msgDiv.innerText = text;
-            chatWindow.appendChild(msgDiv);
-            chatWindow.scrollTop = chatWindow.scrollHeight;
+        } catch (error) {
+            console.error(error);
+            appendMessage("Erreur réseau ou API. Vérifiez votre clé.", 'bot');
+        } finally {
+            btn.disabled = false;
         }
-    </script>
+    }
+
+    function appendMessage(text, side) {
+        const chatWindow = document.getElementById('chat-window');
+        const div = document.createElement('div');
+        div.className = `message ${side}`;
+        
+        const prefix = side === 'bot' ? '<strong>Kimi K2.5 :</strong><br>' : '';
+        div.innerHTML = prefix + text;
+        
+        chatWindow.appendChild(div);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+</script>
+
 </body>
 </html>
