@@ -1,91 +1,55 @@
-
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kimi K2.5 | Multimodal Agent</title>
+    <title>Kimi K2.5 Fixed Chatbot</title>
     <style>
         :root {
-            --primary: #6366f1; /* Indigo moderne pour Kimi */
+            --primary: #6366f1;
             --bg: #0f172a;
             --card: #1e293b;
             --text: #f1f5f9;
             --border: #334155;
-            --user-bubble: #4f46e5;
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden;
         }
 
-        /* Barre de navigation */
         header {
             background: var(--card);
             padding: 1rem 2rem;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
 
-        .status {
-            display: flex;
-            align-items: center;
-            font-size: 0.8rem;
-            color: #10b981;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #10b981;
-            border-radius: 50%;
-            margin-right: 8px;
-            box-shadow: 0 0 10px #10b981;
-        }
-
-        /* Zone de Chat */
         #chat-window {
             flex: 1;
             overflow-y: auto;
             padding: 2rem;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         .message {
             max-width: 80%;
             padding: 1rem;
-            border-radius: 1rem;
-            font-size: 0.95rem;
+            border-radius: 12px;
             line-height: 1.5;
-            animation: fadeIn 0.3s ease;
         }
 
-        .bot {
-            align-self: flex-start;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-bottom-left-radius: 0.2rem;
-        }
+        .bot { align-self: flex-start; background: var(--card); border: 1px solid var(--border); }
+        .user { align-self: flex-end; background: var(--primary); color: white; }
 
-        .user {
-            align-self: flex-end;
-            background: var(--user-bubble);
-            color: white;
-            border-bottom-right-radius: 0.2rem;
-        }
-
-        /* Zone de saisie */
         .input-area {
             background: var(--card);
             padding: 1.5rem;
@@ -93,45 +57,30 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             display: flex;
-            gap: 1rem;
+            gap: 10px;
         }
 
         input {
             flex: 1;
             background: #0f172a;
             border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 0.75rem 1.2rem;
+            border-radius: 8px;
+            padding: 12px;
             color: white;
             outline: none;
-            transition: border 0.3s;
-        }
-
-        input:focus {
-            border-color: var(--primary);
         }
 
         button {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 0 1.5rem;
-            border-radius: 0.75rem;
+            padding: 0 20px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.1s;
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            font-weight: bold;
         }
     </style>
 </head>
@@ -139,25 +88,17 @@
 
 <header>
     <div>
-        <h2 style="margin:0; font-size: 1.2rem;">Kimi K2.5</h2>
-        <span style="font-size: 0.75rem; color: #94a3b8;">Moonshot AI Multimodal Agent</span>
-    </div>
-    <div class="status">
-        <div class="status-dot"></div> Connected to OpenRouter
+        <strong>Kimi K2.5 Agent</strong>
+        <div style="font-size: 10px; color: #94a3b8;">Moonshot AI / OpenRouter</div>
     </div>
 </header>
 
-<div id="chat-window">
-    <div class="message bot">
-        <strong>Kimi K2.5 :</strong><br>
-        Bonjour ! Je suis Kimi K2.5. Je maîtrise le raisonnement complexe, le codage visuel et l'utilisation d'outils agentiques. Comment puis-je vous aider aujourd'hui ?
-    </div>
-</div>
+<div id="chat-window"></div>
 
 <div class="input-area">
     <div class="container">
-        <input type="text" id="userInput" placeholder="Envoyez un message à l'agent..." onkeypress="if(event.key==='Enter') sendMessage()">
-        <button id="sendBtn" onclick="sendMessage()">Envoyer</button>
+        <input type="text" id="userInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendMessage()">
+        <button id="sendBtn" onclick="sendMessage()">SEND</button>
     </div>
 </div>
 
@@ -172,7 +113,6 @@
 
         if (!text) return;
 
-        // Affichage message utilisateur
         appendMessage(text, 'user');
         input.value = "";
         btn.disabled = true;
@@ -182,29 +122,29 @@
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${API_KEY}`,
-                    "HTTP-Referer": window.location.href, // Requis par OpenRouter
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": window.location.origin, // Correct referer for GitHub Pages
+                    "X-Title": "Kimi Chatbot"
                 },
                 body: JSON.stringify({
                     "model": MODEL_ID,
-                    "messages": [
-                        {"role": "user", "content": text}
-                    ]
+                    "messages": [{ "role": "user", "content": text }]
                 })
             });
 
             const data = await response.json();
-            
-            if (data.choices && data.choices[0]) {
-                const aiResponse = data.choices[0].message.content;
-                appendMessage(aiResponse, 'bot');
+
+            if (data.error) {
+                appendMessage("Erreur API: " + data.error.message, 'bot');
+            } else if (data.choices && data.choices[0]) {
+                appendMessage(data.choices[0].message.content, 'bot');
             } else {
-                appendMessage("Erreur : Impossible de récupérer la réponse.", 'bot');
+                appendMessage("Réponse vide du serveur.", 'bot');
             }
 
         } catch (error) {
-            console.error(error);
-            appendMessage("Erreur réseau ou API. Vérifiez votre clé.", 'bot');
+            appendMessage("Erreur de connexion. Vérifiez la console (F12).", 'bot');
+            console.error("Fetch Error:", error);
         } finally {
             btn.disabled = false;
         }
@@ -214,10 +154,7 @@
         const chatWindow = document.getElementById('chat-window');
         const div = document.createElement('div');
         div.className = `message ${side}`;
-        
-        const prefix = side === 'bot' ? '<strong>Kimi K2.5 :</strong><br>' : '';
-        div.innerHTML = prefix + text;
-        
+        div.innerText = text;
         chatWindow.appendChild(div);
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
