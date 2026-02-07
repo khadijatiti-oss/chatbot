@@ -6,148 +6,57 @@
     <title>TeacherVirtuel - Trinity AI</title>
     <style>
         :root {
-            --primary-color: #2563eb;
-            --bg-color: #f8fafc;
-            --chat-bg: #ffffff;
-            --text-dark: #1e293b;
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --accent: #3b82f6;
+            --text: #f8fafc;
+            --error: #ef4444;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        header {
-            background: var(--primary-color);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        #chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 800px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 12px 18px;
-            border-radius: 20px;
-            line-height: 1.5;
-            font-size: 1rem;
-            word-wrap: break-word;
-        }
-
-        .user {
-            align-self: flex-end;
-            background: var(--primary-color);
-            color: white;
-            border-bottom-right-radius: 2px;
-        }
-
-        .bot {
-            align-self: flex-start;
-            background: var(--chat-bg);
-            color: var(--text-dark);
-            border: 1px solid #e2e8f0;
-            border-bottom-left-radius: 2px;
-        }
-
-        .input-area {
-            background: white;
-            padding: 20px;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: center;
-        }
-
-        .input-wrapper {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            max-width: 800px;
-        }
-
-        input {
-            flex: 1;
-            padding: 12px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 25px;
-            outline: none;
-            font-size: 1rem;
-        }
-
-        input:focus { border-color: var(--primary-color); }
-
-        button {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-
-        button:hover { background: #1d4ed8; }
-        button:disabled { background: #94a3b8; cursor: not-allowed; }
-
-        .error-msg {
-            color: #ef4444;
-            font-size: 0.8rem;
-            text-align: center;
-            margin-top: 5px;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        header { background: var(--panel); padding: 15px; border-bottom: 2px solid var(--accent); text-align: center; }
+        #chat-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .bubble { max-width: 80%; padding: 12px 16px; border-radius: 12px; line-height: 1.5; font-size: 0.95rem; }
+        .user { align-self: flex-end; background: var(--accent); color: white; border-bottom-right-radius: 2px; }
+        .bot { align-self: flex-start; background: var(--panel); border: 1px solid #334155; border-bottom-left-radius: 2px; }
+        .error-msg { align-self: center; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--error); color: var(--error); padding: 10px; border-radius: 8px; font-size: 0.85rem; }
+        .input-zone { background: var(--panel); padding: 20px; border-top: 1px solid #334155; display: flex; gap: 10px; }
+        input { flex: 1; background: var(--bg); border: 1px solid #334155; color: white; padding: 12px; border-radius: 8px; outline: none; }
+        input:focus { border-color: var(--accent); }
+        button { background: var(--accent); color: white; border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        button:disabled { opacity: 0.5; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 style="margin:0;">🎓 TeacherVirtuel</h1>
-    <div style="font-size: 0.8rem; opacity: 0.9;">Propulsé par Trinity-Large-Preview</div>
+    <h2 style="margin:0;">🎓 TeacherVirtuel</h2>
+    <small style="color: #94a3b8;">Trinity-Large-Preview MoE</small>
 </header>
 
-<div id="chat-container">
-    <div class="message bot">
-        Bonjour ! Je suis votre professeur virtuel. Je suis prêt à vous expliquer n'importe quel sujet complexe. Que voulez-vous apprendre aujourd'hui ?
-    </div>
+<div id="chat-area">
+    <div class="bubble bot">Bonjour ! Je suis votre professeur virtuel. Ma connexion est maintenant rétablie. Que souhaitez-vous apprendre ?</div>
 </div>
 
-<div class="input-area">
-    <div class="input-wrapper">
-        <input type="text" id="userInput" placeholder="Posez votre question..." onkeypress="if(event.key==='Enter') startTeaching()">
-        <button id="sendBtn" onclick="startTeaching()">ENVOYER</button>
-    </div>
+<div class="input-zone">
+    <input type="text" id="userInput" placeholder="Posez votre question..." onkeypress="if(event.key==='Enter') executeRequest()">
+    <button id="sendBtn" onclick="executeRequest()">POSER</button>
 </div>
 
 <script>
-    // --- CONFIGURATION ---
-    const API_KEY = "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";
-    const MODEL = "arcee-ai/trinity-large-preview:free";
+    // CONFIGURATION OFFICIELLE
+    const API_KEY = "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";
+    const MODEL_ID = "arcee-ai/trinity-large-preview:free";
 
-    async function startTeaching() {
+    async function executeRequest() {
         const input = document.getElementById('userInput');
         const btn = document.getElementById('sendBtn');
-        const chat = document.getElementById('chat-container');
+        const chat = document.getElementById('chat-area');
         const text = input.value.trim();
 
         if (!text) return;
 
-        // UI: Ajouter message utilisateur
-        appendMessage(text, 'user');
+        // Afficher message utilisateur
+        addBubble(text, 'user');
         input.value = "";
         btn.disabled = true;
 
@@ -155,15 +64,15 @@
             const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${API_KEY}`,
+                    "Authorization": `Bearer ${API_KEY.trim()}`,
                     "Content-Type": "application/json",
-                    "HTTP-Referer": window.location.href,
+                    "HTTP-Referer": window.location.origin,
                     "X-Title": "TeacherVirtuel"
                 },
                 body: JSON.stringify({
-                    "model": MODEL,
+                    "model": MODEL_ID,
                     "messages": [
-                        {"role": "system", "content": "Tu es un professeur virtuel expert et bienveillant."},
+                        {"role": "system", "content": "Tu es un professeur virtuel patient et expert."},
                         {"role": "user", "content": text}
                     ]
                 })
@@ -172,25 +81,24 @@
             const data = await response.json();
 
             if (data.error) {
-                appendMessage("Désolé, j'ai une erreur : " + data.error.message, 'bot');
+                // Gestion spécifique de l'erreur "User not found" ou autre
+                addBubble(`Erreur API: ${data.error.message}`, 'error-msg');
             } else if (data.choices && data.choices[0]) {
-                const aiResponse = data.choices[0].message.content;
-                appendMessage(aiResponse, 'bot');
-            } else {
-                appendMessage("Je n'ai pas pu générer de réponse. Vérifie tes crédits OpenRouter.", 'bot');
+                addBubble(data.choices[0].message.content, 'bot');
             }
 
         } catch (error) {
-            appendMessage("Erreur réseau : Impossible de contacter le professeur virtuel.", 'bot');
+            addBubble("Erreur réseau : Impossible de contacter l'IA.", 'error-msg');
         } finally {
             btn.disabled = false;
+            chat.scrollTop = chat.scrollHeight;
         }
     }
 
-    function appendMessage(text, type) {
-        const chat = document.getElementById('chat-container');
+    function addBubble(text, className) {
+        const chat = document.getElementById('chat-area');
         const div = document.createElement('div');
-        div.className = `message ${type}`;
+        div.className = className.includes('error') ? className : `bubble ${className}`;
         div.innerText = text;
         chat.appendChild(div);
         chat.scrollTop = chat.scrollHeight;
